@@ -275,10 +275,10 @@ const ScoreShow = styled.div`
   font-size: 30px;
 `;
 const Button = styled.button`
-  position: absolute;
-  top: 15%;
-  left: 48%;
-  z-index: 1;
-  font-weight: bold;
-  font-size: 30px;
+position: absolute;
+top: 15%;
+left: 48.5%;
+z-index: 1;
+font-weight: bold;
+font-size: 20px;
 `;
