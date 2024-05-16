@@ -77,6 +77,11 @@ export default function SignInSide() {
                     setTimeout(() => {
                         window.location.replace('/dashboard');
                     }, 2000);
+                }else if(res.data.check==false){
+                    notyf.open({
+                        type: "error",
+                        message: "The account is invalid account !",
+                    });
                 }
             })
         }

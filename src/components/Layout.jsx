@@ -11,6 +11,10 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import Navbar from '../components/Navbar';
 function Layout({ children }) {
   const { collapseSidebar } = useProSidebar();
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.replace('/login');
+  };
   return (
     <>
       <div className='row w-100'>
@@ -31,9 +35,10 @@ function Layout({ children }) {
             </MenuItem>
 
             <MenuItem icon={<HomeOutlinedIcon />}>Dashboard</MenuItem>
+            <MenuItem onClick={(e)=>handleLogout()} icon={<HomeOutlinedIcon />}>Logout</MenuItem>
           </Menu>
         </Sidebar>
-        <main className='p-4'>
+        <main className='p-4 w-100' style={{overflow:'hidden'}}>
           {children}
         </main>
       </div>

@@ -8,13 +8,18 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import { Notyf } from "notyf";
 import 'notyf/notyf.min.css';
 import axios from 'axios';
-
+import Loading from "../components/Loading";
 function Dashboard() {
     const [data, setData] = useState([]);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [show1, setShow1] = useState(false);
+    const handleClose1 = () => setShow1(false);
+    const [loading,setLoading]= useState(false);
+    const handleShow1 = () => setShow1(true);
     const [email,setEmail]= useState('');
+    const [email1,setEmail1]= useState('');
     const notyf = new Notyf({
         duration: 1000,
         position: {
@@ -86,7 +91,9 @@ function Dashboard() {
                 }
             })
             .then((res) => {
+                setLoading(true);
                 if(res.data.check==true){
+                setLoading(false);
                     notyf.open({
                         type: "success",
                         message:'Report sent successfully ! Please check',
@@ -97,7 +104,34 @@ function Dashboard() {
             })
         }
     }
-
+    const SubmitSendMail1 = ()=>{
+        if(email1==''){
+            notyf.open({
+                type: "error",
+                message:'Email is required',
+              });
+        }else{
+            axios.post(process.env.REACT_APP_API_URL + 'users/export', {
+                email: email1
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then((res) => {
+                setLoading(true);
+                if(res.data.check==true){
+                setLoading(false);
+                    notyf.open({
+                        type: "success",
+                        message:'Report sent successfully ! Please check',
+                      });
+                      setEmail1('');
+                      setShow1(false);
+                }
+            })
+        }
+    }
     const columns = [
         { field: 'name', headerName: 'Name', width: 150 }
     ];
@@ -116,6 +150,7 @@ function Dashboard() {
     return (
         <Layout>
             <div style={{ height: 400, width: '100%' }}>
+
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Email</Modal.Title>
@@ -132,14 +167,36 @@ function Dashboard() {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <a href={process.env.REACT_APP_API_URL + 'scores/export'} className='btn btn-primary mb-2'>Export </a>
-                <button className='btn btn-warning mb-2 ms-2' onClick={(e)=>handleShow()}>Export to Mail </button>
-                <DataGrid
-                    rows={flattenedData}
-                    columns={columns}
-                    pageSize={5}
-                    checkboxSelection
-                />
+
+                <Modal show={show1} onHide={handleClose1}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Email</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <input type="text" className="form-control" value={email1} onChange={(e)=>setEmail1(e.target.value)} />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button className='btn btn-sm btn-warning' variant="secondary" onClick={handleClose1}>
+                            Close
+                        </Button>
+                        <Button className='btn btn-sm btn-primary' variant="primary"  onClick={(e)=>SubmitSendMail1()}>
+                           Send
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+                    <a href={process.env.REACT_APP_API_URL + 'scores/export'} className='btn btn-sm btn-primary mb-2'>Export Game History </a>
+                    <button className='btn btn-sm btn-warning mb-2 ms-2' onClick={(e)=>handleShow()}>Export Game History To Mail </button>
+                    <a href={process.env.REACT_APP_API_URL + 'scores/export'} className='btn btn-sm btn-primary ms-2 mb-2'>Export Users History </a>
+                    <button className='btn btn-sm btn-warning mb-2 ms-2' onClick={(e)=>handleShow1()}>Export Users To Mail </button>
+                    <div style={{ height: '400px', width: '100%' }}>
+                    <DataGrid
+                        rows={flattenedData}
+                        columns={columns}
+                        pageSize={5}
+                        autoPageSize
+                    />
+                </div>
+              
             </div>
         </Layout>
     );
