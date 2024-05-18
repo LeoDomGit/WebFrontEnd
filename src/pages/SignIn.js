@@ -62,13 +62,12 @@ export default function SignInSide() {
                 password: data.get('password')
             }).then((res) => {
                 if (res.data.check == false) {
-                    if (res.data.msg) {
-                        notyf.open({
-                            type: "error",
-                            message: res.data.msg,
-                        });
-                    }
-                } else if (res.data.check == true) {
+                    notyf.open({
+                        type: "error",
+                        message: "The account is invalid account !",
+                    });
+                   
+                }else if(res.data.check==true){
                     localStorage.setItem('token', res.data.token);
                     notyf.open({
                         type: "success",
@@ -77,11 +76,6 @@ export default function SignInSide() {
                     setTimeout(() => {
                         window.location.replace('/dashboard');
                     }, 2000);
-                }else if(res.data.check==false){
-                    notyf.open({
-                        type: "error",
-                        message: "The account is invalid account !",
-                    });
                 }
             })
         }
