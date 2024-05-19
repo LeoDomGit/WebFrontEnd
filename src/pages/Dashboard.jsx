@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import { DataGrid } from '@mui/x-data-grid';
